@@ -30,4 +30,21 @@ seq(1,10,2)
 seq(1,10,1)
 seq(1,20,3)
 ```
+## Problem 4
+Write a custom function to implement the following general equation to find the sum of any constant series:
+
+## Problem 5 
+Write a custom function that generates a constant series between any start and end values, with any constant, and finds the sum. Have your function output both the sequence and the sum.
+
+## Problem 6 
+For this problem, feel free to use the existing seq() and sum() functions in your custom function. Demonstrate the function correctly prints out the above sequence (10 to 100 in steps of 10), and its sum.
+
+## Problem 7 
+Use the sum() and the length() functions to calculate the mean (average) of the numbers x = c(1,2,3,4,5).
+```{r}
+x = c(1,2,3,4,5)
+mean<-(sum(x))/length(x)
+print(mean)
+
+```
 
