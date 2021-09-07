@@ -15,6 +15,7 @@ Compute the sum of these numbers (1,3,2,4,3,5,4,3,4,5,6,5,6,7,6,5,6,5,4,3,4,5)
 x<-c(1,3,2,4,3,5,4,3,4,5,6,5,6,7,6,5,6,5,4,3,4,5)
 sum(x)
 ```
+
 ## Problem 3
 Write a custom sequence generator function using a for loop that generates a sequence from a starting integer value to an ending integer value in steps of 1. Demonstrate that it can produce the sequence 1 to 10.
 ```{r}
@@ -36,6 +37,7 @@ while(x<=y){
 }}
 cq(1,10,1)
 ```
+
 ## Problem 4
 Write a custom function to implement the following general equation to find the sum of any constant series: Demonstrate that your function correctly produces the sum for the series below:
 
@@ -58,7 +60,6 @@ y<-seq(10,100,10)
 series.sum(y)
 ```
 
-
 ## Problem 5 
 Write a custom function that generates a constant series between any start and end values, with any constant, and finds the sum. Have your function output both the sequence and the sum. For this problem, feel free to use the existing seq() and sum() functions in your custom function. Demonstrate the function correctly prints out the above sequence (10 to 100 in steps of 10), and its sum.
 ```{r}
@@ -71,8 +72,6 @@ series.sum<-function(x,y,c){
 
 series.sum(10,100,10)
 ```
-
-
 
 ## Problem 6 
 Use the sum() and the length() functions to calculate the mean (average) of the numbers x = c(1,2,3,4,5).
