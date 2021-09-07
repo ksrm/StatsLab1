@@ -18,33 +18,67 @@ sum(x)
 ## Problem 3
 Write a custom sequence generator function using a for loop that generates a sequence from a starting integer value to an ending integer value in steps of 1. Demonstrate that it can produce the sequence 1 to 10.
 ```{r}
-
-seq<-function(x,y,by){
-  end<-y-by
-while(x<=end){
+cq<-function(x,y,c){
+  for(i in x:y){
   print(x)
-  x<-x+by
+  sum<-x
+  x<-x+c   
+  }
 }
-print(y)}
-seq(1,10,2)
-seq(1,10,1)
-seq(1,20,3)
+cq(1,10,1)
+
+cq<-function(x,y,c){
+  sum<-c()
+while(x<=y){
+  print(x)
+  sum<-x
+  x<-x+c
+}}
+cq(1,10,1)
 ```
 ## Problem 4
-Write a custom function to implement the following general equation to find the sum of any constant series:
+Write a custom function to implement the following general equation to find the sum of any constant series: Demonstrate that your function correctly produces the sum for the series below:
+
+```{r}
+series.sum<-function(x1,xn,c){
+  n<-((xn-x1)/c)+1
+  k<-((x1+xn)/2)
+series.sum<-n*k
+print(series.sum) 
+}
+series.sum(10,100,10)
+
+series.sum<-function(x){
+  sum<-0
+for(i in x){
+  sum<-i+sum
+}
+print(sum)}
+y<-seq(10,100,10)
+series.sum(y)
+```
+
 
 ## Problem 5 
-Write a custom function that generates a constant series between any start and end values, with any constant, and finds the sum. Have your function output both the sequence and the sum.
+Write a custom function that generates a constant series between any start and end values, with any constant, and finds the sum. Have your function output both the sequence and the sum. For this problem, feel free to use the existing seq() and sum() functions in your custom function. Demonstrate the function correctly prints out the above sequence (10 to 100 in steps of 10), and its sum.
+```{r}
+
+series.sum<-function(x,y,c){
+  series<-list(seq(x,y,c))
+  print(paste("The series is",series))
+  print(paste("The sum of the series is",sum(seq(x,y,c))))
+}
+
+series.sum(10,100,10)
+```
+
+
 
 ## Problem 6 
-For this problem, feel free to use the existing seq() and sum() functions in your custom function. Demonstrate the function correctly prints out the above sequence (10 to 100 in steps of 10), and its sum.
-
-## Problem 7 
 Use the sum() and the length() functions to calculate the mean (average) of the numbers x = c(1,2,3,4,5).
 ```{r}
 x = c(1,2,3,4,5)
 mean<-(sum(x))/length(x)
 print(mean)
-
 ```
 
