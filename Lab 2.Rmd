@@ -1,0 +1,156 @@
+---
+title: "Lab 2"
+output: html_document
+---
+
+ 
+```{r}
+library(ggplot2)
+library(dplyr)
+
+WHR<-read.csv("open_data/WHR2018.csv")
+```
+
+
+
+## Problem 1
+Use R to demonstrate that the mean minimizes the sum of the squared deviations from the mean. 
+Accomplish the following steps:
+Produce a sample of at least 10 or more different numbers
+Produce a simulation following the example from the concepts section
+Use your simulation to test a range of numbers smaller and larger than the mean to show that the mean minimizes the sum of the squared deviations from the mean.
+Plot your results.
+```{r}
+deriv_SS<-function(x){
+  sum_deviations<-c()
+  for(i in x){
+    sum_deviations[i]<-sum((i-x)^2)
+  }
+ plot(sum_deviations)
+}
+
+deriv_SS(1:21)  
+deriv_SS(1:111)
+
+```
+
+
+## Problem 2
+Write a custom R function for any one of the following descriptive statistics: median, mode, standard deviation, variance. Demonstrate that it produces the same value as the base R function given some set of numbers.
+```{r}
+sample_nums<-1:10
+
+custom_var<-function(x){
+  SS<-0
+  for(i in x){
+     SS<-((i-mean(x))^2)+SS
+  }
+  SS/(length(sample_nums)-1)
+}
+custom_var(1:10)
+var(sample_nums)
+
+```
+
+
+## Problem 3
+Imagine the same instructor taught a morning, afternoon, and evening section of the same course. And, the average scores for each section on a midterm were 85% for the morning, 90% for the afternoon, and 93% for the evening sections. Create a data.frame representing these means for each section. Then, use ggplot2 to plot the means as bar graph. (hint you will need one vector for the class sections, and one vector for the means. Then you can combine them into a data.frame before plotting them)
+```{r}
+class_sections<-c("morning", "afternoon", "evening")
+class_means<-c(85,90,93)
+
+means_df<-data.frame(class_sections,class_means)
+means_df
+
+theme_update(plot.title = element_text(hjust = 0.5))
+
+ggplot(means_df, aes(x=class_sections,y=class_means))+
+  geom_bar(stat="identity", fill= "#DD8888")+
+  ggtitle("Title")+
+  coord_cartesian(ylim = c(69, 100))
+
+```
+
+
+## Problem 4
+Imagine there were two instructors, and they each taught different sections in the morning, afternoon and evening. The midterm averages for instructor 1 were 75%, 78%, and 80% in the morning, afternoon, and evening. The midterm averages for instructor 2 were 88%, 76%, and 63% for the morning, afternoon, and evening. Create a data.frame representing the means, the time of day, and the instructors (three columns). Then plot data.frame using ggplot2 as a bar graph.
+```{r}
+class_sections<-rep(c("morning", "afternoon", "evening"), 2)
+means<-c(75,78,80,88,76,63)
+prof<-c(rep("profX",3),rep("profy",3))
+
+
+means_df<-data.frame(class_sections, means, prof)
+means_df
+
+ggplot(means_df, aes(x=class_sections,y=means, fill= prof))+
+  geom_bar(stat="identity")+
+  ggtitle("Title")+
+  coord_cartesian(ylim = c(69, 100))
+```
+
+
+## Problem 5
+Import the WHR2018.csv data file, containing measure from the World Happiness report from 2018. For the years 2010 to 2015, what was the mean “healthy life expectancy at birth” for each year (find the mean for each year across countries). Show your results in a table and in a graph using ggplot.
+```{r}
+WHRhealth<-WHR%>%
+  select(year, ï..country, Healthy.life.expectancy.at.birth)%>%
+  filter(year==2010:2015)%>%
+  group_by(year)%>%
+  rename(Country=ï..country, Year=year, HealthExpectancy=Healthy.life.expectancy.at.birth)%>%
+  summarize(AvgHealth=mean(HealthExpectancy))
+  
+knitr::kable(WHRhealth)
+
+ggplot(data=WHRhealth,mapping=aes(x=Year, y=AvgHealth))+
+  geom_bar(stat="identity")+
+  ggtitle("Average Health Expectancy")+
+  scale_x_continuous(breaks=2010:2015)+
+  coord_cartesian(ylim = c(40, 80))
+
+?coord_cartesian
+
+
+WHRhealth3.0<-WHR%>%
+  select(year, ï..country, Healthy.life.expectancy.at.birth)%>%
+  filter(year==2010:2015)%>%
+  group_by(ï..country, year)%>%
+  rename(Country=ï..country, Year=year, HealthExpectancy=Healthy.life.expectancy.at.birth)%>%
+  summarize(AvgHealth=mean(HealthExpectancy))
+  
+
+
+ggplot(data=WHRhealth3.0,mapping=aes(x=Year, y=AvgHealth, group=Country, color=Country))+
+  facet_wrap(~Country)+
+  geom_line()+
+  geom_point()+
+  ggtitle("Average Health Expectancy at Birth")
+
+
+```
+
+
+## Problem 6
+Repeat the above, except in addition to calculating the mean for each year, also calculate the standard deviation for “healthy life expectancy at birth” for each year. Then, add error bars to your graph using the +1 and -1 standard deviations from the means for each year.
+```{r}
+WHRhealth2.0<-WHR%>%
+  select(year, ï..country, Healthy.life.expectancy.at.birth)%>%
+  filter(year==2010:2015)%>%
+  group_by(ï..country, year)%>%
+  rename(Country=ï..country, Year=year, HealthExpectancy=Healthy.life.expectancy.at.birth)%>%
+  summarize(AvgHealth=mean(HealthExpectancy))
+  
+knitr::kable(WHRhealth2.0)
+
+```
+
+
+## Advanced
+
+The mean minimizes the sum of the squared deviations. The median minimizes the sum of the absolute deviations. Demonstrate these properties by simulation in R.
+
+Create a set of numbers where the mean and median are different. Then show a plot of values around the mean and the median showing that the mean minimizes the sum of the squared deviations. Finally, create a plot of values around the mean and the median showing that the median minimizes the sum of the absolute deviations.
+```{r}
+
+```
+
