@@ -133,16 +133,25 @@ ggplot(data=WHRhealth3.0,mapping=aes(x=Year, y=AvgHealth, group=Country, color=C
 ## Problem 6
 Repeat the above, except in addition to calculating the mean for each year, also calculate the standard deviation for “healthy life expectancy at birth” for each year. Then, add error bars to your graph using the +1 and -1 standard deviations from the means for each year.
 ```{r}
-WHRhealth2.0<-WHR%>%
-  select(year, ï..country, Healthy.life.expectancy.at.birth)%>%
-  filter(year==2010:2015)%>%
-  group_by(ï..country, year)%>%
-  rename(Country=ï..country, Year=year, HealthExpectancy=Healthy.life.expectancy.at.birth)%>%
-  summarize(AvgHealth=mean(HealthExpectancy))
-  
-knitr::kable(WHRhealth2.0)
+# WHRhealth2.0<-WHR%>%
+#   select(year, ï..country, Healthy.life.expectancy.at.birth)%>%
+#   filter(year==2010:2015)%>%
+#   group_by(ï..country, year)%>%
+#   rename(Country=ï..country, Year=year, HealthExpectancy=Healthy.life.expectancy.at.birth)%>%
+#   summarize(AvgHealth=mean(HealthExpectancy))
+#   
+# knitr::kable(WHRhealth2.0)
 
 ```
+
+## Confidence in submission
+
+Problem 1 - 90
+Problem 2 - 100
+Problem 3 - 70
+Problem 4 - 75 - error to be fixed
+Problem 5 - 90
+Problem 6 - to be completed
 
 
 ## Advanced
