@@ -13,23 +13,20 @@ observations<-rep(rnorm(25, 200,100),5)
 samples <- rep(1:5,each =25)
 my_data <- data.frame(samples, observations)
 
-my_data
-
 means <- my_data %>%
   group_by(samples) %>%
-  summarize(sample_mean = mean(observations))
+  summarize(sample_mean = mean(observations), sd=sd(observations))
 
+#sample_means
 ggplot(means, aes(x = samples, y =sample_mean))+
   geom_bar(stat="identity")
+
+#error bars added
+ggplot(means, aes(x = samples, y =sample_mean))+
+  geom_bar(stat="identity")+
+  geom_errorbar(aes(ymin=sample_mean-sd, ymax=sample_mean+sd))
+
 ```
-
-
-Additionally calculate the standard deviation of each sample from above. Use the standard deviations for error bars, and produce another graph with the means along with error bars using ggplot2. (1 point)
-```{r}
-
-```
-
-
 The last two problems concern the concept of using a sample to estimate a property of the population or distribution the sample came from. For example, if we know the mean of a sample, can we be confident that the population has the same mean? If we were trying to guess at the population mean, what statistics from the sample should we use?
 
 Some sample statistics are “biased”, and may systematically under or overestimate a population parameter. Others are “unbiased”, in this case the sample statistic tends to correctly estimate the population parameter over the long run.
