@@ -27,15 +27,11 @@ ggplot(means, aes(x = samples, y =sample_mean))+
   geom_errorbar(aes(ymin=sample_mean-sd, ymax=sample_mean+sd))
 
 ```
-The last two problems concern the concept of using a sample to estimate a property of the population or distribution the sample came from. For example, if we know the mean of a sample, can we be confident that the population has the same mean? If we were trying to guess at the population mean, what statistics from the sample should we use?
-
-Some sample statistics are “biased”, and may systematically under or overestimate a population parameter. Others are “unbiased”, in this case the sample statistic tends to correctly estimate the population parameter over the long run.
 
 Demonstrate that the sample mean across a range of n, is an unbiased estimator of the population mean using a monte-carlo simulation. (2 points).
 ```{r}
 
 ```
-
 
 
 The population is a normal distribution with mean = 10, standard deviation = 5.
