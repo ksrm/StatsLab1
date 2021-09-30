@@ -30,7 +30,24 @@ ggplot(means, aes(x = samples, y =sample_mean))+
 
 Demonstrate that the sample mean across a range of n, is an unbiased estimator of the population mean using a monte-carlo simulation. (2 points).
 ```{r}
+set.seed(116)
+test_population<-sample(runif(1000000))
+true_mean<-mean(test_population)
+print(true_mean)
 
+#sampling distribution of n=100
+sample1=rep(NA,10000)
+for ( i in 1:10000) {
+  sample1[i]<- mean(sample(test_population, size=100))
+}
+mean(sample1)
+
+#sampling distribution of n=1000
+sample2=rep(NA,10000)
+for ( i in 1:10000) {
+  sample2[i]<- mean(sample(test_population, size=1000))
+}
+mean(sample2)
 ```
 
 
