@@ -62,7 +62,33 @@ Show the mean of the sample means for each sample size.
 
 Use a monte carlo simulation to compare the standard deviation formulas (divide by N vs N-1), and show that the N-1 formula is a better unbiased estimate of the population standard deviation, especially for small n. (2 points)
 ```{r}
+set.seed(116)
+test_population<-sample(runif(100000))
+sd(test_population)
+true_sd(test_population)
 
+
+true_sd<-function(x){
+  sum<-0
+  for (i in x){
+    sum<-((i-mean(x))^2)+sum
+  }
+  sqrt(sum/length(x))
+}
+  
+#sampling distribution of n=10 using n-1
+sd_sample1=rep(NA,10000)
+for ( i in 1:10000) {
+  sd_sample1[i]<- sd(sample(test_population, size=10))
+}
+mean(sd_sample1)
+
+#sampling distribution of n=10 using n
+sd_sample2=rep(NA,10000)
+for ( i in 1:10000) {
+  sd_sample2[i]<- true_sd(sample(test_population, size=10))
+}
+mean(sd_sample2)
 ```
 
 
@@ -71,6 +97,9 @@ Rather than computing the mean for each sample, compute both forms of the standa
 You should have 10,000 samples for each sample size, and 10,000 standard deviations for each the sample and regular standard deviation. Your task is to find the average of each, for each sample-size.
 Which of the standard deviations is more systematically biased? That is, which one is systematically worse at estimating the population standard deviation?
 ```{r}
+
+
+sqrt(sum(abs((a-(mean(a)^2)))/(length(a)-1)
 
 ```
 
