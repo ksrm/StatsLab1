@@ -91,7 +91,6 @@ ggplot(sim_data, aes(x=sample_size, y=sim_sample_N), group=1)+
 
 On my own, Monte Carlo simulation lines of code would need to be much longer. Used RStats Method course answer key to condense samples and add in additional vectors to store mean of means and mean of standard deviations. 
 Problem 1/2 - 90
-Problem 2 - 60
 Problem 3 - 60
 Problem 4 - 60 
 
