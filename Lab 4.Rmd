@@ -1,0 +1,106 @@
+---
+title: "Lab 4"
+author: KSRM
+output: html_document
+---
+
+```{r}
+library(dplyr)
+```
+
+## Confidence in Submission 
+
+Problem 1 - 80 - tested character sorting without using dplyr. referred to lab code to use dplyr
+Problem 2 - 60 - referred to lab code
+Problem 3 - 90 - through a long process attempting to use my own for loop, I finally took the suggestion of a online forum user and used the cumsum.
+Problem 4 - 80 - followed along with code in class
+Problem 5 - 70 - followed along with code in class
+
+
+1. Estimate the letter occurrence probabilities of all 26 letters in English by measuring a paragraph of English text from wikipedia. (hint use strsplit() to split a paragraph into individual letters) (1 point).
+```{r}
+wiki_entry <- scan(file="wiki_entry.txt", what="character", sep="")
+wiki_entry <- tolower(wiki_entry)
+wiki_entry <- unlist(strsplit(wiki_entry, ""))
+
+#if statement to only keep letters
+only_letters <- NULL
+for (character in wiki_entry) {
+  if (character %in% letters == TRUE){
+    only_letters<-c(character,only_letters)
+  }
+  }
+only_letters
+
+#dplyr
+#prepare data putting into data frame
+letter_counts <- table(wiki_entry)
+letter_counts <- data.frame(letter_counts)
+
+
+letter_counts <- letter_counts %>%
+  filter(wiki_entry %in% letters == TRUE) %>%
+  mutate(probabilities = Freq/sum(letter_counts$Freq))
+
+knitr::kable(letter_counts)
+```
+
+
+2. Generate “random” strings of letters that are sampled from a distribution where letter occurrence probability is the same as natural English. Use the probabilities for each letter from this wikipedia article, or use your own estimates from the previous question (2 points).
+```{r}
+my_letters <- sample(letter_counts$wiki_entry, 50*5, replace=TRUE, prob= letter_counts$probabilities)
+my_letters <- matrix(my_letters, ncol=5)
+random_strings <- c()
+
+
+dim(my_letters)[2]
+nrow(my_letters)
+
+for (i in 1:nrow(my_letters)){
+  random_strings[i] <- paste(my_letters[i,],collapse="")
+}
+random_strings
+```
+
+
+3. Generate a random walk of 10,000 steps. In a random walk, you are simulating the process of randomly taking a step up or down, as if you are on an infinite staircase. At each step you flip a coin. If you get heads you go up one step, if you get tails you go down one step. Start on step 0, then simulate a random walk for 10,000 steps. Your vector should preserve the step number for each step. For example, if the the first three steps were all heads, then the vector would begin with 0,1,2,3, which indicates a single step up each time. Plot the first 1,000 steps. (1 point)
+```{r}
+new_vector<-c()
+x <- 10000
+heads <- 1
+tails <- (-1)
+coin_flip <- c(heads,tails)
+new_vector[seq_len(x)]<- replicate(x,sample(coin_flip, 1,prob=c(.5,.5), replace = TRUE)) 
+step<-cumsum(new_vector)
+print(step)
+plot(step)
+```
+
+
+4. What was the most positive and most negative step reached out of 10,000? (1 point)
+```{r}
+max(step)
+min(step)
+```
+
+
+5. What was the longest run of steps where all steps were positive numbers. For example, in the sequence: 1,2,3,2,1,0,-1,-2,-1,-2,-1,0,1,2,3; the answer is 5 because the first five values were all positive, and this was the longest sequence of positive values. (1 point).
+```{r}
+logical_step <- sign(step)
+
+sequence <- c()
+counter <- 0
+for(i in 1:length(logical_step)) {
+  if(logical_step[i] ==0) {
+    sequence <- c(sequence,counter)
+    counter <- 0
+  } else{
+   counter <- counter+logical_step[i] 
+  }
+}
+
+max(sequence)
+min(sequence)
+```
+
+
