@@ -1,0 +1,43 @@
+---
+title: "Lab 6"
+author: KSRM
+output: html_document
+---
+
+## Confidence in Submission 
+
+Problem 1: 80 - I followed along with the lesson for lab 6. Small change was made to randomization carried out using a monte carlo simulation. Area that I could improve on is manipulations with ggplot2 using select and group_by. 
+
+
+## Results of Randomization 
+
+The condition group was randomized, resulting in mean differences between condition group 1 and 2 that did not exceed + or - 2. This randomization test reflects that mean differences close to |+/-2| between condition groups would be unlikely to occur by chance alone. On the other hand, if the experimental mean difference was 0.5 or greater, then there would be a considerable probability of 0.207 that the mean difference was produced by chance alone. 
+
+```{r}
+library(dplyr)
+library(ggplot2)
+the_data <- read.csv("open_data/SchroederEpley2015data.csv", header=TRUE)
+colnames(the_data)[1] <- gsub('^...', '',colnames(the_data)[1])
+
+possible_differences <- c()
+
+for (i in 1:1000){
+  new_data <- the_data %>%
+    mutate(randomizedcondition = sample(CONDITION, 39, replace=TRUE))%>%
+    group_by(randomizedcondition)%>%
+    summarize(new_mean=mean(Intellect_Rating))
+
+    possible_differences[i] <-new_data[new_data$randomizedcondition==1,]$new_mean-new_data[new_data$randomizedcondition     ==0,]$new_mean
+}
+
+
+qplot(unlist(possible_differences), xlab = "mean differences", ylab = "number of simulations")+
+  geom_histogram(color="orange")+
+  geom_vline(xintercept=0.5,color="red")+
+  theme_classic()
+
+
+length(possible_differences[possible_differences>=0.5])/length(possible_differences)
+```
+
+
