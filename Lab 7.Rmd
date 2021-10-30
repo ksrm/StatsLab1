@@ -1,0 +1,60 @@
+---
+title: "Lab 7"
+author: KSRM
+output: html_document
+---
+
+## Confidence in Submission
+
+Problem 1 - 70 - Need to confirm interpretation of test. 
+Problem 2 - 
+
+Problem 1 - Given 50 trials and a 60% success rate, does the binomial test indicate that it is probable or improbable that chance alone played a part ? 
+
+It is improbable that the test-taker was guessing. Based on the binomial distribution, only about 10% of the time would it be possible for the test-taker to guess 60% of the questions correctly. 
+```{r}
+library(purrr)
+x <- 30
+y <- 50
+map2(x, y, alternative = "greater", .f = binom.test)
+
+
+test_results <- binom.test((.60*50), 50, alternative = "greater")
+
+# x - favorable or successful outcomes
+# n - number of trials
+# alternative = greater
+# p = p value
+
+test_results
+test_results$p.value
+```
+
+Problem 2 - How many true-false questions does it take to ensure that chance alone cannot produce a score over 55% ? 
+
+In order to prevent even one test-taker from achieving a score greater than 55% by chance, an examiner would need to use at least 575 questions on the test.  
+
+```{r}
+total.questions <- seq(100, 800, 25)
+#default p-value is 0.5
+percent.correct <- round(total.questions*.55)
+
+results <- map2(.x = percent.correct, .y = total.questions, alternative = "greater", .f = binom.test)
+p_values <- unlist(lapply(results, `[`, 3))
+
+plot(x = total.questions, y = p_values, cex = 0.5, pch = 16, ylim = c(0,.25), asp = 0)
+abline(h = 0.0099, v = 0, col = "red", lty = 2)#produce horizontal line for p_value of 0.05
+
+df <- data.frame(total.questions, p_values)
+df
+
+```
+
+Problem 3 - 
+
+note - for the second part of the problem I think binom.test will be run for a 75% chance score 
+```{r}
+
+
+```
+
