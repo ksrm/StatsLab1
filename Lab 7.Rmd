@@ -7,7 +7,8 @@ output: html_document
 ## Confidence in Submission
 
 Problem 1 - 70 - Need to confirm interpretation of test. 
-Problem 2 - 
+Problem 2 - 80 - First time using purrr package.
+Problem 3 - 80 - Is it possible to check response using pbinom ? 
 
 Problem 1 - Given 50 trials and a 60% success rate, does the binomial test indicate that it is probable or improbable that chance alone played a part ? 
 
@@ -35,6 +36,7 @@ Problem 2 - How many true-false questions does it take to ensure that chance alo
 In order to prevent even one test-taker from achieving a score greater than 55% by chance, an examiner would need to use at least 575 questions on the test.  
 
 ```{r}
+library(purrr)
 total.questions <- seq(100, 800, 25)
 #default p-value is 0.5
 percent.correct <- round(total.questions*.55)
@@ -43,7 +45,7 @@ results <- map2(.x = percent.correct, .y = total.questions, alternative = "great
 p_values <- unlist(lapply(results, `[`, 3))
 
 plot(x = total.questions, y = p_values, cex = 0.5, pch = 16, ylim = c(0,.25), asp = 0)
-abline(h = 0.0099, v = 0, col = "red", lty = 2)#produce horizontal line for p_value of 0.05
+abline(h = 0.0099, v = 0, col = "red", lty = 2)#produce horizontal line for p_value of 0.0099
 
 df <- data.frame(total.questions, p_values)
 df
@@ -52,9 +54,36 @@ df
 
 Problem 3 - 
 
-note - for the second part of the problem I think binom.test will be run for a 75% chance score 
-```{r}
+5 T/F questions 
+p = .5
+q = .5
 
+5 MC questions 
+p = .25
+q = .75
+
+Create a sampling distribution to illustrate a random chance process. 
+What is the probability of achieving 75% or greater by chance on this exam ?
+
+There is less than a one percent chance of getting 75% or greater. 
+```{r}
+TF <- .5
+MC <- .25
+total.questions <- 10
+percent.correct <- round(.75*total.questions)
+probability <- c(rep(TF,5), rep(MC,5))
+number_of_simulations <- seq_len(10000)
+
+test.scores <- c()
+for (i in number_of_simulations){
+       test.scores[i] <- (sum (rbinom (n = rep(1, total.questions), size = 1, prob = probability))) / total.questions
+
+          }
+length(test.scores[test.scores > .75])/ length(number_of_simulations)
+hist(test.scores)
+
+#1- pbinom(length(test.scores[test.scores > .75]), size = length(number_of_simulations), prob = .5 or probability, lower.tail = FALSE)
 
 ```
+
 
