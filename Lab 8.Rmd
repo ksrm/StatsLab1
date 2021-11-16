@@ -1,0 +1,60 @@
+---
+title: "Lab 8"
+author: KSRM
+output: html_document
+---
+
+## Confidence in Submission
+
+Problem 1- 80
+Problem 2- 80
+
+
+Problem 1- Write a function that converts vectors of raw-scores into z-scores. 
+
+```{r}
+set.seed(10)
+raw_scores <- sample(rnorm(10))
+
+my_zscores <- function (raw_scores, u = NULL, s = NULL){
+  if(is.null(u)== TRUE) u <- mean(raw_scores)
+  if(is.null(s) == TRUE) s <- sd(raw_scores)
+  z_scores <- (raw_scores - u) / s
+  return(z_scores)
+}
+
+my_zscores(raw_scores)
+
+my_zscores(raw_scores, 10,5)
+
+```
+
+Problem 2 - Write a function for a one-sample z-test.
+
+The p-value of the sample mean = 50 is 4.570531e-13. We can infer that the sample is not from null hypothesis distribution. 
+```{r}
+z_test <- function(n, x_bar, mu, sigma){
+    SEM <- sigma/(sqrt(n))
+    sample_q <- x_bar
+    p_value <- pnorm(sample_q, mu, SEM, lower.tail = FALSE)
+    print(p_value)
+}
+
+z_test(25, 50, 40, 7)
+
+
+#running mean difference test  
+
+md_norm <- function(n, mu, sigma) {
+    mean_differences <- replicate(10000, mean(rnorm(n, mu, sigma)) - mean(rnorm(n, mu, sigma)))
+    hist(mean_differences)
+    print(paste(c("Maximum is", max(mean_differences))))
+
+    #formula
+    SEM_mean_differences <- (sqrt(2)*sigma)/(sqrt(n))
+    print(paste(c("SEM =", SEM_mean_differences)))
+}
+
+md_norm(25, 40, 7)
+```
+
