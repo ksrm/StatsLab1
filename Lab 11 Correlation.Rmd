@@ -5,6 +5,9 @@ date: "12/2/2021"
 output: html_document
 ---
 
+Confidence in Submission:
+80 - It was necessary to review permutation versus randomization tests.  
+
 Problem 1 
 A. Calculate Pearson's R and associated p-value using cor.test(). 
 B. Use a permutation test to create a null-distribution, and report the p-value for getting the observed correlation or larger using your simulated null-distribution.
@@ -14,8 +17,13 @@ Y <- c(1,3,6,7,8,2,8,7,6,9)
 
 results <- cor.test(X, Y)
 
-results$estimate # pearson's R
-results$p.value
+r1 <- results$estimate # pearson's R
+p1 <- results$p.value
+
+null_dist <- replicate(1000, cor(sample(X),sample(Y))) # permute two variables, compute r, replicate
+
+(p2 <- length(null_dist[null_dist >= r1])/1000)
+
 ```
 
 
@@ -23,7 +31,9 @@ Problem 2
 Compute both the smallest and largest possible sum of cross-products using X & Y vectors. 
 ```{r}
 # largest sum of cross-products
-sum(X*Y)
+sum(sort(X)*sort(Y))
+
+sum(sort(X, decreasing = TRUE)*sort(Y, decreasing = TRUE))
 
 # smallest sum of cross-products
 X2 <- sort(X, decreasing = FALSE)
