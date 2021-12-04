@@ -1,0 +1,125 @@
+---
+title: "Lab 9"
+author: KSRM
+output: html_document
+---
+
+## Confidence in Submission
+
+80 - To review group by, pivot wider, and creating a matrix from the contingency table. 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,          # show both code and output or only output ?
+  fig.align = 'center',  # centers graphs on the page,
+  out.width = "90%",    # setting width for graphs,
+  warning = FALSE,      # include warnings/messages from console ?
+  message = FALSE, 
+  size = "small"       # setting size of LaTex output
+  )
+
+library(readxl)
+library(tibble)
+```
+
+## Silver et al.'s experiment 1 results (Silver et al., 2020, p. 1424)
+
+## Binomial test
+
+The two-tailed binomial test resulted in a p-value of 0.026, suggesting that the choice of toy followed more than chance. 
+
+## Two chi squared tests. 
+
+Silver et al. found no significant relationships between infants choices and age or gender. The results of the two chi squared tests of independence were as follows:
+
+Nineteen degrees of freedom for the age variable. 
+$$ 
+\chi^2(19, N = 21) = 18.24
+$$
+One degree of freedom for the gender variable. 
+$$ 
+\chi^2(1, N = 21) = 0.696
+$$
+
+## Re-analysis of research results. 
+
+I was able to reproduce the results for the binomial test with a p-value of 0.0266, indicating that it is unlikely that infants chose novel cubes due to chance alone. 
+```{r}
+paper <- read_excel("When not choosing leads to not liking_Data.xlsx")
+
+tibble(paper)
+colnames(paper) 
+
+(colnames(paper) <- gsub(" ", "_", colnames(paper)))
+
+#reproduce the binomial test 
+library(dplyr)
+
+e1 <- paper %>%
+  filter(ExperimentNumber == "1")
+
+number_chose_C <- sum(e1$Infant_Chose_C)
+
+binom.test(x = number_chose_C,
+           n = dim(e1)[1],
+           p = .5,
+           alternative = "two.sided")
+
+
+# applying pbinom - rstats notes
+total_C <- length(e1$Infant_Chose_C)
+(binomial_p <- pbinom(q = total_C - number_chose_C,
+                      size = total_C, 
+                      prob = .5, 
+                      lower.tail = TRUE)*2)
+  
+```
+
+
+## Reproduce the chi-squared test for categorical variables gender and toy choice
+
+I obtained the same chi-squared value of 0.15273 and p-value of 0.6959, indicating no relationship between gender and toy choice.  
+```{r}
+library(tidyr)
+
+# frequency crosstab
+gender_crosstab <- table(e1$Infant_Chose_C, e1$Gender)
+
+# frequency table using dplyr - rstats notes
+gender_choice_table <- e1 %>%
+  group_by(Gender, Infant_Chose_C) %>%
+  summarize(counts = n()) %>%
+  pivot_wider(names_from = c(Gender),
+              values_from = counts)
+
+# running chi squared test
+chisq.test(gender_crosstab, correct = FALSE)
+
+
+chisq.test(gender_choice_table[,2:3], correct = FALSE)
+(gender_chi <- chisq.test(gender_choice_table[,2:3]))
+uncorrected_gender_chi_sq <- sum((gender_chi$observed-gender_chi$expected)^2/gender_chi$expected)
+
+(gender_chi_sq_unc <- pchisq(uncorrected_gender_chi_sq,df = 1,lower.tail = FALSE))# p-value 
+```
+
+## Reproduce the chi-squared test for transformed variable age and toy choice
+
+I obtained the same chi-squared value of 18.244 and p-value of 0.5062, indicating no relationship between age as a factor variable and toy choice. 
+```{r}
+age_crosstab <- table(e1$AgeMonths, e1$Infant_Chose_C)
+(chisq.test(age_crosstab, correct = FALSE))
+
+#rstats solution
+age_table <- e1 %>%
+  group_by(AgeMonths, Infant_Chose_C) %>%
+  summarize(counts = n()) %>%
+  pivot_wider(names_from = c(AgeMonths),
+              values_from = counts)
+age_table[is.na(age_table)] <- 0
+age_table <- as.matrix(age_table[,2:21])
+(age_xs <- chisq.test(age_table))
+```
+
+
