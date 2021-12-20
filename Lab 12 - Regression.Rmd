@@ -1,0 +1,22 @@
+---
+title: "Lab 12 - Regression"
+author: "KSRM"
+date: "12/6/2021"
+output: html_document
+---
+
+Confidence in Submission:
+90
+
+I tried a couple of ways to work with these vectors in case it is possible to run linear regression, but at face value, there is no linear relationship between these vectors. Linear regression should not be run. 
+
+```{r}
+Y <- c(10,9,8,7,6,5,4,3,2,
+       1,2,3,4,5,6,7,8,9,10)
+
+X <- c(1,2,3,4,5,6,7,8,9,
+       10,11,12,13,14,15,16,17,18,19)
+
+plot(X,Y)
+```
+
