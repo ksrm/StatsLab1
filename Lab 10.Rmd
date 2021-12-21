@@ -1,0 +1,100 @@
+---
+title: "Lab 10"
+author: "KSRM"
+date: "11/17/2021"
+output: html_document
+---
+
+Confidence in Submission
+
+0 - use of rstats solution
+Stumped by why it is not possible to take the mean of already detected variables.
+
+
+Data preparation.
+Overview: Experiment 3 data (Rosenbaum et al., 2017) consists of paired samples, n = 50 observations where participants were exposed to congruent and incongruent stimuli under both standing and sitting conditions.  
+```{r}
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+stroop_stand <- read.csv("open_data/stroop_stand.csv")
+
+colnames(stroop_stand)[1] <- "congruent_stand"
+dim(stroop_stand)
+
+(test_condition <- colnames(stroop_stand))
+
+tibble(stroop_stand)
+```
+
+
+1. Reproduce as much of the analysis as possible using only paired-sample t-tests. Note, the authors reported a 2x2 repeated measures ANOVA, but consider how the same questions could be answered by t-tests (2 points)
+```{r}
+# r stats solution
+# Stand Stroop effect
+(stand_stroop <- t.test(stroop_stand$incongruent_stand,
+       stroop_stand$congruent_stand,
+       paired = TRUE))
+# Sit Stroop effect
+(sit_stroop <- t.test(stroop_stand$incongruent_sit,
+       stroop_stand$congruent_sit,
+       paired = TRUE))
+```
+
+
+2.Reproduce a graph of the means, like shown in the paper (2 points)
+```{r}
+# r stats solution
+stroop_df <- stroop_stand %>%
+  pivot_longer(cols = 1:4,
+               names_to = c("Congruency","Posture"),
+               names_sep = "_",
+               values_to = "RTs")
+# get means
+overall_means <- stroop_df %>%
+                  group_by(Posture,Congruency) %>%
+                  summarise(meanRT = mean(RTs),
+                            SEMRT = (sd(RTs)/sqrt(length(RTs))))
+
+# plot
+ggplot(overall_means, aes(x=Posture,
+                          y=meanRT, 
+                          group=Congruency,
+                          fill=Congruency))+
+  geom_bar(stat="identity",position="dodge")+
+  theme_classic(base_size=12)+
+  ylab("Mean Reaction Time (ms)")+
+  geom_errorbar(aes(ymin=meanRT-SEMRT,
+                    ymax=meanRT+SEMRT),
+                position=position_dodge(width=0.9),
+                width=.2,
+                color="black")+
+  coord_cartesian(ylim=c(500,1000))
+```
+
+3. Present a power-curve analysis for the design. (2 points)
+```{r}
+# rstats code 
+
+effect_sizes <- seq(0,1.5,.1)
+prop_significant <-c()
+for(i in 1:length(effect_sizes)){
+  sim_ps <- replicate(1000, t.test(replicate(50, rnorm(1, effect_sizes[i], 1)),
+                                   mu = 0)$p.value)
+  
+  prop_significant[i] <- length(sim_ps[sim_ps < .05])/1000
+}
+plot_df <- data.frame(effect_sizes,
+                      prop_significant)
+ggplot(plot_df, aes(x=effect_sizes,y=prop_significant))+
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks=seq(0,1.5,.1))+
+  scale_y_continuous(breaks=seq(0,1,.1)) +
+  ylab("Proportion Significant")
+```
+
+
+
